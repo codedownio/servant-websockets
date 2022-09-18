@@ -28,7 +28,6 @@ library
                      , servant-server
                      , text
                      , wai
-                     , wai-websockets
                      , warp
                      , websockets
   ghc-options:         -Wall

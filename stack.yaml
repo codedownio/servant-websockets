@@ -1,6 +1,8 @@
-resolver: lts-14.0
+resolver: nightly-2022-02-07
 packages:
 - .
-extra-deps: []
+extra-deps:
+- git: https://github.com/codedownio/websockets
+  commit: 62a23e981f1f231b00eed0584547ecbaeb252894
 flags: {}
 extra-package-dbs: []

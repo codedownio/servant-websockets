@@ -6,15 +6,15 @@
 packages:
 - completed:
     name: websockets
-    version: 0.12.7.3
+    version: 0.13.0.0
     git: https://github.com/codedownio/websockets
     pantry-tree:
-      size: 4412
-      sha256: 105b19d3b6f3a9c6dd46bca926e72c2247ff14d775fa6cfcc112825970a80c24
-    commit: 62a23e981f1f231b00eed0584547ecbaeb252894
+      size: 4459
+      sha256: abd52c0c6f51973d8f8c56d7f84d522c747ac154a4a480026e0c018eea328ba3
+    commit: d38f75d573e0b3096472984abaf513a513fb1605
   original:
     git: https://github.com/codedownio/websockets
-    commit: 62a23e981f1f231b00eed0584547ecbaeb252894
+    commit: d38f75d573e0b3096472984abaf513a513fb1605
 snapshots:
 - completed:
     size: 634925

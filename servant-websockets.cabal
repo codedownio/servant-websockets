@@ -27,6 +27,7 @@ library
                      , monad-control
                      , servant-server
                      , text
+                     , unliftio
                      , wai
                      , warp
                      , websockets

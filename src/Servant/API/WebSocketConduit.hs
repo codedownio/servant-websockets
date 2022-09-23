@@ -23,14 +23,16 @@ import Data.Text                                  (Text)
 import Data.Void                                  (Void)
 import Network.Wai.Handler.WebSockets             (websocketsOr)
 import Network.WebSockets                         (Connection, ConnectionException, acceptRequest,
-                                                   defaultConnectionOptions, forkPingThread, receiveData,
+                                                   defaultConnectionOptions, receiveData,
                                                    receiveDataMessage, sendClose, sendTextData)
+import Network.WebSockets.Connection              (pingThread)
 import Servant.Server                             (HasServer (..), ServerError (..), ServerT)
-import Servant.Server.Internal.Router             (leafRouter)
-import Servant.Server.Internal.RouteResult        (RouteResult (..))
 import Servant.Server.Internal.Delayed            (runDelayed)
+import Servant.Server.Internal.RouteResult        (RouteResult (..))
+import Servant.Server.Internal.Router             (leafRouter)
 
 import qualified Data.Conduit.List as CL
+import qualified UnliftIO.Async as Async
 
 -- | Endpoint for defining a route to provide a websocket. In contrast
 -- to the 'WebSocket' endpoint, 'WebSocketConduit' provides a
@@ -134,14 +136,14 @@ instance ToJSON o => HasServer (WebSocketSource o) ctx where
 
 runConduitWebSocket :: (MonadBaseControl IO m, MonadUnliftIO m) => Connection -> ConduitT () Void (ResourceT m) () -> m ()
 runConduitWebSocket c a = do
-  liftIO $ forkPingThread c 10
-  void $ runConduitRes a
-  liftIO $ do
-    sendClose c ("Out of data" :: Text)
-    -- After sending the close message, we keep receiving packages
-    -- (and drop them) until the connection is actually closed,
-    -- which is indicated by an exception.
-    forever $ receiveDataMessage c
+  Async.withAsync (liftIO $ pingThread c 10 (return ())) $ \_ -> do
+    void $ runConduitRes a
+    liftIO $ do
+      sendClose c ("Out of data" :: Text)
+      -- After sending the close message, we keep receiving packages
+      -- (and drop them) until the connection is actually closed,
+      -- which is indicated by an exception.
+      forever $ receiveDataMessage c
 
 upgradeRequired :: ServerError
 upgradeRequired = ServerError { errHTTPCode = 426

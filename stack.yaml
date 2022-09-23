@@ -3,6 +3,6 @@ packages:
 - .
 extra-deps:
 - git: https://github.com/codedownio/websockets
-  commit: 62a23e981f1f231b00eed0584547ecbaeb252894
+  commit: d38f75d573e0b3096472984abaf513a513fb1605
 flags: {}
 extra-package-dbs: []
